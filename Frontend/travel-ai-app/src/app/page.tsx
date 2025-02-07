@@ -1,74 +1,249 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import styles from "./page.module.css";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen p-8 bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-2 text-gray-800 dark:text-white">
-          Travel Itinerary Generator
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          Plan your perfect trip in minutes
+  const [loading, setLoading] = useState(false);
+  const [itinerary, setItinerary] = useState<any>(null);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const activities = Array.from(formData.getAll("activities"));
+
+    const data = {
+      destination: formData.get("destination"),
+      start_date: formData.get("startDate"),
+      duration: formData.get("duration"),
+      budget: formData.get("budget"),
+      activities: activities,
+      preferences: formData.get("preferences"),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/api/process-input/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      setItinerary(responseData);
+      console.log("Response:", responseData.response);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const responseDisplay = itinerary && (
+    <div className={styles.resultContainer}>
+      <h2 className={styles.resultTitle}>Your Travel Itinerary</h2>
+
+      <div className={styles.tripSummary}>
+        <h3>Trip Overview</h3>
+        <p>
+          <strong>Destination:</strong> {itinerary.response.destination}
         </p>
+        <p>
+          <strong>Duration:</strong> {itinerary.response.duration} days
+        </p>
+        <p>
+          <strong>Start Date:</strong>{" "}
+          {new Date(itinerary.response.start_date).toLocaleDateString()}
+        </p>
+        <p>
+          <strong>Budget:</strong> ${itinerary.response.budget}
+        </p>
+      </div>
+
+      <div className={styles.itineraryDays}>
+        {Object.entries(itinerary.response.itinerary).map(
+          ([day, places]: [string, any]) => (
+            <div key={day} className={styles.dayCard}>
+              <h3 className={styles.dayTitle}>{day}</h3>
+              <div className={styles.placesGrid}>
+                {places.map((place: any, index: number) => (
+                  <div key={index} className={styles.placeCard}>
+                    <h4 className={styles.placeName}>{place.name}</h4>
+                    <div className={styles.placeDetails}>
+                      <p className={styles.placeType}>
+                        <span className={styles.label}>Type:</span> {place.type}
+                      </p>
+                      <p className={styles.placeRating}>
+                        <span className={styles.label}>Rating:</span>{" "}
+                        {place.rating} ⭐
+                      </p>
+                      <p className={styles.placeAddress}>
+                        <span className={styles.label}>Address:</span>{" "}
+                        {place.address}
+                      </p>
+                      {place.phone && (
+                        <p className={styles.placePhone}>
+                          <span className={styles.label}>Phone:</span>{" "}
+                          {place.phone}
+                        </p>
+                      )}
+                      <div className={styles.placeLinks}>
+                        {place.maps_url && (
+                          <a
+                            href={place.maps_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.placeLink}
+                          >
+                            View on Google Maps
+                          </a>
+                        )}
+                        {place.website && (
+                          <a
+                            href={place.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.placeLink}
+                          >
+                            Visit Website
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Travel Itinerary Generator</h1>
+        <p className={styles.subtitle}>Plan your perfect trip in minutes</p>
       </header>
 
-      {/* Main Content */}
-      <main className="flex flex-col items-center max-w-2xl mx-auto w-full">
-        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <form className="space-y-6">
-            <div>
-              <label
-                htmlFor="destination"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
-              >
+      <main className={styles.main}>
+        <div className={styles.formContainer}>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.formGroup}>
+              <label htmlFor="destination" className={styles.label}>
                 Destination
               </label>
               <input
                 type="text"
                 id="destination"
+                name="destination"
                 placeholder="e.g., Paris, France"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                className={styles.input}
+                required
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="duration"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
-              >
-                Duration (days)
+            <div className={styles.formGroupGrid}>
+              <div className={styles.formGroup}>
+                <label htmlFor="startDate" className={styles.label}>
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  className={styles.input}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="duration" className={styles.label}>
+                  Duration (days)
+                </label>
+                <input
+                  type="number"
+                  id="duration"
+                  name="duration"
+                  min="1"
+                  max="30"
+                  placeholder="e.g., 5"
+                  className={styles.input}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="budget" className={styles.label}>
+                Budget (USD)
               </label>
               <input
                 type="number"
-                id="duration"
-                min="1"
-                max="30"
-                placeholder="e.g., 5"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                id="budget"
+                name="budget"
+                placeholder="e.g., 1000"
+                className={styles.input}
+                required
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition duration-300"
-            >
-              Generate Itinerary
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Preferred Activities</label>
+              <div className={styles.checkboxGrid}>
+                {[
+                  "Sightseeing",
+                  "Museums",
+                  "Food & Dining",
+                  "Shopping",
+                  "Nature",
+                  "Adventure",
+                  "Relaxation",
+                  "Cultural",
+                ].map((activity) => (
+                  <label key={activity} className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      name="activities"
+                      value={activity}
+                      className={styles.checkbox}
+                    />
+                    <span>{activity}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="preferences" className={styles.label}>
+                Additional Preferences
+              </label>
+              <textarea
+                id="preferences"
+                name="preferences"
+                rows={3}
+                placeholder="Any dietary restrictions, accessibility requirements, or specific interests?"
+                className={styles.textarea}
+              />
+            </div>
+
+            <button type="submit" className={styles.button} disabled={loading}>
+              {loading ? "Generating..." : "Generate Itinerary"}
             </button>
           </form>
         </div>
 
-        {/* Result section - Initially hidden, show when results are available */}
-        <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hidden">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">
-            Your Itinerary
-          </h2>
-          {/* Itinerary results will be displayed here */}
-        </div>
+        {responseDisplay}
       </main>
 
-      {/* Footer */}
-      <footer className="text-center py-6 text-sm text-gray-600 dark:text-gray-400">
+      <footer className={styles.footer}>
         <p>© 2024 Travel Itinerary Generator. All rights reserved.</p>
       </footer>
     </div>

@@ -16,7 +16,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .itinerary_generator import ItineraryGenerator
+import json
+
+generator = ItineraryGenerator()
+
+@csrf_exempt
+def process_input(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            itinerary = generator.create_itinerary(data)
+            return JsonResponse({
+                'response': itinerary,
+                'message': 'Itinerary generated successfully'
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/process-input/', process_input, name='process_input'),
 ]
