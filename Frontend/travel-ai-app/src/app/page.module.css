@@ -2,7 +2,6 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
-  padding: 2rem;
   background-color: #f9fafb;
 }
 
@@ -26,7 +25,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 42rem;
+  /* max-width: 42rem; */
   margin: 0 auto;
   width: 100%;
   gap: 2rem;
@@ -34,7 +33,7 @@
 
 .formContainer {
   width: 100%;
-  background-color: white;
+  background-color: #f8f9fa;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
@@ -60,8 +59,8 @@
 
 .label {
   font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .input,
@@ -70,7 +69,7 @@
   padding: 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  background-color: white;
+  background-color: #f8f9fa;
   transition: all 0.2s;
 }
 
@@ -131,30 +130,70 @@
 .resultContainer {
   margin-top: 2rem;
   padding: 2rem;
-  background: white;
+  background: #f8f9fa;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+}
+
+/* Add styles for all text elements in the response */
+.resultContainer h2,
+.resultContainer h3,
+.resultContainer h4,
+.resultContainer p,
+.resultContainer pre,
+.resultContainer span {
+  color: #1f2937;
+}
+
+/* Style for the JSON response */
+.resultContainer pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 0.9rem;
+  margin-top: 1rem;
 }
 
 .tripSummary {
   margin-bottom: 2rem;
   padding: 1rem;
-  background: #f8f9fa;
+  /* background: #f8f9fa; */
   border-radius: 8px;
+  color: #1f2937;
+}
+
+.tripSummary h3 {
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.tripSummary p {
+  color: #1f2937;
 }
 
 .dayCard {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  /* background: #f8f9fa; */
   border-radius: 8px;
 }
 
 .dayTitle {
-  color: #2c3e50;
+  color: #1f2937;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e9ecef;
+  font-weight: 600;
+}
+
+.resultTitle {
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .placesGrid {
@@ -164,21 +203,23 @@
 }
 
 .placeCard {
-  background: white;
+  /* background: #f8f9fa; */
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: #1f2937;
 }
 
 .placeName {
-  color: #2c3e50;
+  color: #1f2937;
   margin-bottom: 1rem;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .placeDetails p {
   margin: 0.5rem 0;
-  color: #4a5568;
+  color: #1f2937;
 }
 
 .placeLinks {
@@ -270,5 +311,306 @@
 
   .footer {
     color: #9ca3af;
+  }
+
+  .placeDetails p,
+  .tripSummary,
+  .tripSummary h3,
+  .tripSummary p,
+  .placeCard,
+  .placeName,
+  .label {
+    color: #e5e7eb;
+  }
+
+  .resultContainer,
+  .dayTitle,
+  .resultTitle {
+    color: #e5e7eb;
+  }
+
+  .resultContainer h2,
+  .resultContainer h3,
+  .resultContainer h4,
+  .resultContainer p,
+  .resultContainer pre,
+  .resultContainer span {
+    color: #e5e7eb;
+  }
+
+  .resultContainer pre {
+    background-color: #374151;
+  }
+
+  .resultContainer,
+  .placeCard {
+    background-color: #1f2937;
+  }
+}
+
+/* Add these new styles */
+.searchBarContainer {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.searchForm {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.searchInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.inputWrapper {
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+.dateInputs {
+  display: flex;
+  gap: 0.5rem;
+  flex: 2;
+  min-width: 280px;
+}
+
+.dateInput {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+.activityDropdown {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.activityInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.activityInput {
+  width: 100%;
+  padding: 0.5rem;
+  padding-right: 2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+.dropdownArrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.activityList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  margin-top: 0.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  list-style: none;
+  padding: 0;
+}
+
+.activityItem {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.activityItem:hover {
+  background-color: #f3f4f6;
+}
+
+.selectedActivities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.activityTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.removeActivity {
+  border: none;
+  background: none;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.searchButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.searchButton:hover {
+  background-color: #2563eb;
+}
+
+.searchButton:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .searchInputGroup {
+    gap: 0.75rem;
+  }
+
+  .inputWrapper,
+  .dateInputs,
+  .activityDropdown {
+    flex: 1 1 calc(50% - 0.75rem);
+  }
+
+  .searchButton {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .searchForm {
+    padding: 0 0.5rem;
+  }
+
+  .searchInputGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .inputWrapper,
+  .dateInputs,
+  .activityDropdown {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .dateInputs {
+    flex-direction: column;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+
+  .selectedActivities {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Update dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .searchBarContainer {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
+  }
+
+  .searchInputGroup {
+    background-color: #374151;
+  }
+
+  .searchInput,
+  .dateInput,
+  .activityInput {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: white;
+  }
+
+  .activityList {
+    background-color: #1f2937;
+    border-color: #4b5563;
+  }
+
+  .activityItem:hover {
+    background-color: #374151;
+  }
+
+  .activityTag {
+    background-color: #374151;
+    color: white;
+  }
+
+  .removeActivity {
+    color: #9ca3af;
+  }
+
+  .dropdownArrow {
+    color: #9ca3af;
+  }
+}
+
+/* Add styles for the result container responsiveness */
+.resultContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .placesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .placeCard {
+    margin-bottom: 1rem;
+  }
+
+  .tripSummary {
+    padding: 0.75rem;
   }
 }

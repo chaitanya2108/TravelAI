@@ -1,0 +1,111 @@
+.recommendationsContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.destinationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.destinationCard {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.destinationCard:hover {
+  transform: translateY(-4px);
+}
+
+.imageContainer {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.destinationImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destinationInfo {
+  padding: 1.25rem;
+}
+
+.destinationName {
+  font-size: 1.25rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.destinationDescription {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.activitiesTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.activityTag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border-radius: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sectionTitle {
+    color: #f9fafb;
+  }
+
+  .destinationCard {
+    background-color: #1f2937;
+  }
+
+  .destinationName {
+    color: #f9fafb;
+  }
+
+  .destinationDescription {
+    color: #9ca3af;
+  }
+
+  .activityTag {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+}
+
+@media (max-width: 640px) {
+  .recommendationsContainer {
+    margin: 1rem auto;
+  }
+
+  .destinationsGrid {
+    gap: 1rem;
+  }
+
+  .imageContainer {
+    height: 160px;
+  }
+}

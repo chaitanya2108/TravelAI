@@ -28,15 +28,44 @@ def process_input(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            # Log the received data
+            print("Received data:", data)
+
+            # Validate required fields
+            required_fields = ['destination', 'start_date', 'end_date', 'budget', 'activities']
+            missing_fields = [field for field in required_fields if not data.get(field)]
+
+            if missing_fields:
+                return JsonResponse({
+                    'error': f'Missing required fields: {", ".join(missing_fields)}',
+                    'message': 'Please fill all required fields'
+                }, status=400)
+
+            # Convert budget to int/float if it's a string
+            if isinstance(data['budget'], str):
+                data['budget'] = float(data['budget'])
+
             itinerary = generator.create_itinerary(data)
             return JsonResponse({
                 'response': itinerary,
                 'message': 'Itinerary generated successfully'
             })
         except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+            return JsonResponse({
+                'error': 'Invalid JSON data',
+                'message': 'The request data could not be parsed'
+            }, status=400)
+        except ValueError as e:
+            return JsonResponse({
+                'error': str(e),
+                'message': 'Invalid input data'
+            }, status=400)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            print("Error:", str(e))  # Log the error
+            return JsonResponse({
+                'error': str(e),
+                'message': 'Failed to generate itinerary'
+            }, status=500)
     return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 urlpatterns = [

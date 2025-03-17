@@ -2,6 +2,7 @@ import googlemaps
 from datetime import datetime, timedelta
 from django.conf import settings
 import random
+import json
 
 class ItineraryGenerator:
     def __init__(self):
@@ -35,17 +36,18 @@ class ItineraryGenerator:
     def get_place_details(self, place_id):
         """Get additional details for a place"""
         try:
-            details = self.gmaps.place(place_id, fields=['url', 'website', 'formatted_phone_number'])
+            details = self.gmaps.place(place_id, fields=['url', 'website', 'formatted_phone_number', 'opening_hours'])
             return {
                 'maps_url': details.get('result', {}).get('url', ''),
                 'website': details.get('result', {}).get('website', ''),
-                'phone': details.get('result', {}).get('formatted_phone_number', '')
+                'phone': details.get('result', {}).get('formatted_phone_number', ''),
+                'opening_hours': details.get('result', {}).get('opening_hours', {})
             }
         except Exception as e:
             print(f"Error fetching place details: {str(e)}")
             return {}
 
-    def generate_daily_itinerary(self, location, activities):
+    def generate_daily_itinerary(self, location, activities, date_str):
         """Generate a single day's itinerary based on selected activities"""
         daily_places = []
         places_per_activity = 2
@@ -72,7 +74,6 @@ class ItineraryGenerator:
                             min(places_per_activity, len(places))
                         )
                         for place in selected_places:
-                            # Get additional details for each place
                             details = self.get_place_details(place['place_id'])
                             daily_places.append({
                                 'name': place['name'],
@@ -82,37 +83,68 @@ class ItineraryGenerator:
                                 'maps_url': details.get('maps_url', ''),
                                 'website': details.get('website', ''),
                                 'phone': details.get('phone', ''),
-                                'photos': place.get('photos', [])[:1],  # Get first photo if available
-                                'price_level': place.get('price_level', 'N/A')
+                                'date': date_str,
+                                'price_level': place.get('price_level', 'N/A'),
+                                'opening_hours': details.get('opening_hours', {})
                             })
 
         return daily_places
 
     def create_itinerary(self, data):
         """Create a full itinerary based on user input"""
-        destination = data['destination']
-        start_date = datetime.strptime(data['start_date'], '%Y-%m-%d')
-        duration = int(data['duration'])
-        activities = data['activities']
+        try:
+            # Extract and validate input data
+            destination = data.get('destination')
+            if not destination:
+                raise ValueError("Destination is required")
 
-        location = self.get_location_coordinates(destination)
-        if not location:
-            return {'error': 'Could not find location'}
+            # Validate dates
+            try:
+                start_date = datetime.strptime(str(data.get('start_date', '')), '%Y-%m-%d')
+                end_date = datetime.strptime(str(data.get('end_date', '')), '%Y-%m-%d')
+            except ValueError:
+                raise ValueError("Invalid date format. Use YYYY-MM-DD")
 
-        itinerary = {}
+            if end_date < start_date:
+                raise ValueError("End date must be after start date")
 
-        for day in range(duration):
-            current_date = start_date + timedelta(days=day)
-            date_str = current_date.strftime('%Y-%m-%d')
-            daily_places = self.generate_daily_itinerary(location, activities)
-            itinerary[f"Day {day + 1} ({date_str})"] = daily_places
+            activities = data.get('activities', [])
+            if not activities:
+                raise ValueError("At least one activity must be selected")
 
-        return {
-            'destination': destination,
-            'start_date': data['start_date'],
-            'duration': duration,
-            'budget': data['budget'],
-            'activities': activities,
-            'preferences': data['preferences'],
-            'itinerary': itinerary
-        }
+            budget = data.get('budget')
+            if not budget:
+                raise ValueError("Budget is required")
+
+            # Get location coordinates
+            location = self.get_location_coordinates(destination)
+            if not location:
+                raise ValueError(f"Could not find coordinates for {destination}")
+
+            # Calculate duration and generate itinerary
+            duration = (end_date - start_date).days + 1
+            itinerary = {}
+
+            for day in range(duration):
+                current_date = start_date + timedelta(days=day)
+                date_str = current_date.strftime('%Y-%m-%d')
+                daily_places = self.generate_daily_itinerary(location, activities, date_str)
+                itinerary[f"Day {day + 1} ({date_str})"] = daily_places
+
+            # Prepare response
+            return {
+                'destination': destination,
+                'start_date': start_date.strftime('%Y-%m-%d'),
+                'end_date': end_date.strftime('%Y-%m-%d'),
+                'duration': duration,
+                'budget': budget,
+                'activities': activities,
+                'itinerary': itinerary
+            }
+
+        except KeyError as e:
+            raise ValueError(f"Missing required field: {str(e)}")
+        except ValueError as e:
+            raise ValueError(str(e))
+        except Exception as e:
+            raise Exception(f"Error generating itinerary: {str(e)}")
