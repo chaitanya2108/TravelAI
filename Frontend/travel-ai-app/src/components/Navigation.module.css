@@ -1,0 +1,141 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.logoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.accountSection {
+  position: relative;
+}
+
+.accountButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.accountButton:hover {
+  background-color: #e5e7eb;
+}
+
+.accountIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #1f2937;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 50;
+}
+
+.dropdownMenu {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+.dropdownMenu li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #1f2937;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.dropdownMenu li a:hover {
+  background-color: #e5e7eb;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
+  }
+
+  .logo {
+    color: #f9fafb;
+  }
+
+  .tagline {
+    color: #9ca3af;
+  }
+
+  .accountIcon {
+    color: #f9fafb;
+  }
+
+  .accountButton:hover {
+    background-color: #374151;
+  }
+
+  .dropdown {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .dropdownMenu li a {
+    color: #f9fafb;
+  }
+
+  .dropdownMenu li a:hover {
+    background-color: #374151;
+  }
+
+  .divider {
+    background-color: #374151;
+  }
+}
